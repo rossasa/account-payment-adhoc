@@ -45,6 +45,9 @@ class account_check_action(models.TransientModel):
         required=True,
         default=_get_company_id
         )
+    deposit = fields.Char(
+        string='Deposit Number'
+        )
 
     @api.onchange('journal_id')
     def onchange_journal_id(self):
@@ -100,6 +103,7 @@ class account_check_action(models.TransientModel):
             credit_line_vals = vals.get('credit_line_vals', {})
             check_move_field = vals.get('check_move_field')
             signal = vals.get('signal')
+            deposit = vals.get('deposit')
 
             move = self.env['account.move'].with_context({}).create(move_vals)
             debit_line_vals['move_id'] = move.id
@@ -108,7 +112,7 @@ class account_check_action(models.TransientModel):
             move.line_id.with_context({}).create(debit_line_vals)
             move.line_id.with_context({}).create(credit_line_vals)
 
-            check.write({check_move_field: move.id})
+            check.write({'check_move_field': move.id, 'deposit': deposit})
             check.signal_workflow(signal)
             move.button_validate()
         return True
@@ -127,6 +131,7 @@ class account_check_action(models.TransientModel):
             ref = _('Deposit Check Nr. ')
             check_move_field = 'deposit_account_move_id'
             journal = self.journal_id
+            deposit = self.deposit
             debit_account_id = self.account_id.id
             partner = check.source_partner_id.id,
             credit_account_id = vou_journal.default_credit_account_id.id
@@ -186,4 +191,5 @@ class account_check_action(models.TransientModel):
             'credit_line_vals': credit_line_vals,
             'check_move_field': check_move_field,
             'signal': signal,
+            'deposit': deposit,
             }

@@ -248,6 +248,9 @@ class account_check(models.Model):
         readonly=True,
         copy=False
         )
+    deposit = fields.Char(
+        string='Deposit Number'
+        )
     # account move of return
     return_account_move_id = fields.Many2one(
         'account.move',

@@ -93,6 +93,7 @@
                             <field name="third_handed_voucher_id" invisible="'from_voucher' in context"  context="{'form_view_ref':'account_voucher.view_vendor_payment_form'}" attrs="{'invisible':[('third_handed_voucher_id','=',False)]}"/>
                             <field name="source_partner_id" invisible="'from_voucher' in context" attrs="{'invisible':[('source_partner_id','=',False)]}"/>
                             <field name="destiny_partner_id" invisible="'from_voucher' in context" attrs="{'invisible':[('destiny_partner_id','=',False)]}"/>
+                            <field name="deposit" attrs="{'invisible':[('deposit','=',False)]}"/>
                         </group>
                         <group>
                             <field name="replacing_check_id" attrs="{'invisible':[('replacing_check_id','=',False)]}"/>
