@@ -19,55 +19,55 @@ class account_change_check(models.TransientModel):
         required=True,
         default=get_original_check,
         ondelete='cascade',
-        )
+    )
     journal_id = fields.Many2one(
         related='original_check_id.journal_id',
-        )
+    )
     type = fields.Selection(
         related='original_check_id.type',
-        )
+    )
     number = fields.Integer(
         'Number',
         required=True,
-        )
+    )
     issue_date = fields.Date(
         'Issue Date',
         required=True,
         default=fields.Date.context_today,
-        )
+    )
     payment_date = fields.Date(
         'Payment Date',
         help="Only if this check is post dated",
-        )
+    )
 
     # issue checks
     checkbook_id = fields.Many2one(
         'account.checkbook',
         'Checkbook',
         ondelete='cascade',
-        )
+    )
     issue_check_subtype = fields.Selection(
         related='checkbook_id.issue_check_subtype',
-        )
+    )
 
     # third checks
     bank_id = fields.Many2one(
         'res.bank', 'Bank',
-        )
+    )
     vat = fields.Char(
         # TODO rename to Owner VAT
         'Owner Vat',
-        )
+    )
     owner_name = fields.Char(
         'Owner Name',
-        )
+    )
 
     @api.onchange('original_check_id')
     def change_original_check(self):
         self.checkbook_id = self.original_check_id.checkbook_id
         self.vat = self.original_check_id.vat
-        self.vat = self.original_check_id.owner_name
-        self.vat = self.original_check_id.bank_id
+        self.owner_name = self.original_check_id.owner_name
+        self.bank_id = self.original_check_id.bank_id
 
     @api.multi
     def confirm(self):
@@ -85,7 +85,7 @@ class account_change_check(models.TransientModel):
             'replacing_check_id': new_check.id,
             'amount': 0.0,
             'company_currency_amount': 0.0,
-            })
+        })
         self.original_check_id.signal_workflow('change_check')
         new_check.signal_workflow('draft_router')
         return new_check

@@ -1,38 +1,32 @@
 # -*- coding: utf-8 -*-
 from openerp import models, fields, api
 import openerp.addons.decimal_precision as dp
+# from dateutil.relativedelta import relativedelta
+# import datetime
 
 
-class account_tax_withholding(models.Model):
+class AccountTaxWithholding(models.Model):
     _name = "account.tax.withholding"
     _description = "Account Withholding Taxes"
 
     name = fields.Char(
         'Name',
         required=True,
-        )
+    )
     description = fields.Char(
         'Description',
         required=True,
-        )
+    )
     type_tax_use = fields.Selection(
         [('receipt', 'Receipt'), ('payment', 'Payment'), ('all', 'All')],
         'Tax Application',
         required=True
-        )
+    )
     active = fields.Boolean(
         'Active',
         default=True,
         help="If the active field is set to False,"
              "it will allow you to hide the tax without removing it.")
-    # TODO add this field  and other for automation
-    # type = fields.Selection(
-    #     [('percent', 'Percentage'), ('fixed', 'Fixed Amount'),
-    #      ('none', 'None'), ('code', 'Python Code'), ('balance', 'Balance')],
-    #     'Type',
-    #     required=True,
-    #     help="The computation method for the tax amount."
-    #     )
     sequence_id = fields.Many2one(
         'ir.sequence',
         'Internal Number Sequence',
@@ -41,34 +35,35 @@ class account_tax_withholding(models.Model):
             "{'default_code': 'account.tax.withholding',"
             " 'default_name': name}"),
         help='If no sequence provided then it will be required for you to'
-             ' enter withholding number when registering one.'
+             ' enter withholding number when registering one.',
         # 'default_prefix': 'x-', 'default_padding': 8}",
-        )
+        copy=False
+    )
     account_id = fields.Many2one(
         'account.account',
         'Account',
         required=True,
-        )
+    )
     ref_account_id = fields.Many2one(
         'account.account',
         'Refund Account',
         required=True,
-        )
+    )
     account_analytic_id = fields.Many2one(
         'account.analytic.account',
         'Analytic Account',
-        )
+    )
     ref_account_analytic_id = fields.Many2one(
         'account.analytic.account',
         'Refund Analytic Account',
-        )
+    )
     company_id = fields.Many2one(
         'res.company',
         'Company',
         required=True,
         default=lambda self: self.env['res.company']._company_default_get(
             'account.tax.withholding')
-        )
+    )
     #
     # Fields used for the Tax declaration
     #
@@ -77,48 +72,46 @@ class account_tax_withholding(models.Model):
         'account.tax.code',
         'Base Code',
         help="Use this code for the tax declaration."
-        )
+    )
     tax_code_id = fields.Many2one(
         'account.tax.code',
         'Tax Code',
-        required=True,
         help="Use this code for the tax declaration.",
-        )
+    )
     base_sign = fields.Float(
         'Base Code Sign',
         help="Usually 1 or -1.",
         digits=dp.get_precision('Account'),
         default=1,
-        )
+    )
     tax_sign = fields.Float(
         'Tax Code Sign',
         help="Usually 1 or -1.",
         digits=dp.get_precision('Account'),
         default=1,
-        )
+    )
     ref_base_code_id = fields.Many2one(
         'account.tax.code',
         'Refund Base Code',
         help="Use this code for the tax declaration."
-        )
+    )
     ref_tax_code_id = fields.Many2one(
         'account.tax.code',
         'Refund Tax Code',
-        required=True,
         help="Use this code for the tax declaration.",
-        )
+    )
     ref_base_sign = fields.Float(
         'Refund Base Code Sign',
         help="Usually 1 or -1.",
         digits=dp.get_precision('Account'),
         default=1,
-        )
+    )
     ref_tax_sign = fields.Float(
         'Refund Tax Code Sign',
         help="Usually 1 or -1.",
         digits=dp.get_precision('Account'),
         default=1,
-        )
+    )
 
     @api.model
     def create(self, vals):
@@ -126,7 +119,7 @@ class account_tax_withholding(models.Model):
             # if we have the right to create a journal, we should be able to
             # create it's sequence.
             vals.update({'sequence_id': self.sudo().create_sequence(vals).id})
-        return super(account_tax_withholding, self).create(vals)
+        return super(AccountTaxWithholding, self).create(vals)
 
     @api.model
     def create_sequence(self, vals):
@@ -135,6 +128,7 @@ class account_tax_withholding(models.Model):
         seq = {
             'name': vals['name'],
             'implementation': 'no_gap',
+            'code': 'account.tax.withholding',
             # 'prefix': prefix + "/%(year)s/",
             'padding': 8,
             'number_increment': 1
@@ -151,8 +145,9 @@ class account_chart_template(models.Model):
         'account.tax.withholding.template',
         'chart_template_id',
         'Withholding Template List',
-        help='List of all the withholding that have to be installed by the wizard'
-        )
+        help='List of all the withholding that have to be installed by the '
+        'wizard'
+    )
 
 
 class account_tax_withholding_template(models.Model):
@@ -164,25 +159,25 @@ class account_tax_withholding_template(models.Model):
         'account.chart.template',
         'Chart Template',
         required=True
-        )
+    )
     account_id = fields.Many2one(
         'account.account.template',
-        )
+    )
     ref_account_id = fields.Many2one(
         'account.account.template',
-        )
+    )
     base_code_id = fields.Many2one(
         'account.tax.code.template',
-        )
+    )
     tax_code_id = fields.Many2one(
         'account.tax.code.template',
-        )
+    )
     ref_base_code_id = fields.Many2one(
         'account.tax.code.template',
-        )
+    )
     ref_tax_code_id = fields.Many2one(
         'account.tax.code.template',
-        )
+    )
 
     @api.multi
     def _generate_withholding(
