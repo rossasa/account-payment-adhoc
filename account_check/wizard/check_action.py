@@ -191,9 +191,5 @@ class account_check_action(models.TransientModel):
             'credit_line_vals': credit_line_vals,
             'check_move_field': check_move_field,
             'signal': signal,
-<<<<<<< HEAD
             'deposit': deposit,
-            }
-=======
         }
->>>>>>> upstream/8.0
