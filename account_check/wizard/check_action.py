@@ -51,7 +51,7 @@ class account_check_action(models.TransientModel):
 
     @api.onchange('journal_id')
     def onchange_journal_id(self):
-        self.account_id = self.journal_id.default_debit_account_id.id
+        self.account_id = self.journal_id.internal_account_id.id or self.journal_id.default_debit_account_id.id
 
     @api.model
     def validate_action(self, action_type, check):
@@ -144,6 +144,7 @@ class account_check_action(models.TransientModel):
             credit_account_id = journal.default_debit_account_id.id
             debit_account_id = vou_journal.default_credit_account_id.id
             signal = 'handed_debited'
+            deposit = False
         elif self.action_type == 'return':
             ref = _('Return Check Nr. ')
             check_move_field = 'return_account_move_id'
@@ -153,7 +154,7 @@ class account_check_action(models.TransientModel):
             partner = check.source_partner_id.id,
             credit_account_id = vou_journal.default_credit_account_id.id
             signal = 'holding_returned'
-
+            deposit = False
         name = self.env['ir.sequence'].next_by_id(
             journal.sequence_id.id)
         ref += check.name
