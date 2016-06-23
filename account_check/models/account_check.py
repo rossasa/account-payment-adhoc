@@ -82,7 +82,8 @@ class account_check(models.Model):
     )
     company_currency_amount = fields.Float(
         'Company Currency Amount',
-        readonly=True,
+        readonly=False,
+        invisible=True,
         digits=dp.get_precision('Account'),
         help='This value is only set for those checks that has a different '
         'currency than the company one.'
@@ -319,6 +320,13 @@ class account_check(models.Model):
     def onchange_voucher(self):
         self.owner_name = self.voucher_id.partner_id.name
         self.vat = self.voucher_id.partner_id.vat
+
+    @api.one
+    @api.onchange('amount')
+    def recompute_currency_amount(self):
+        if self.currency_id and self.currency_id != self.env.user.company_id.currency_id:
+            currency_rate = self.currency_id._get_current_rate()
+            self.company_currency_amount = self.amount*currency_rate[self.currency_id.id]
 
     @api.one
     def unlink(self):
