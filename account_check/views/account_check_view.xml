@@ -77,7 +77,7 @@
                             <field name="bank_id" attrs="{'invisible':[('type','!=','third_check')],'required':[('type','=','third_check')]}"/>
                             <field name="number"/>
                             <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                            <field name="company_currency_amount" attrs="{'invisible':[('company_currency_amount','=', 0)]}" /> <!-- groups="base.group_no_one" -->
+                            <field name="company_currency_amount" readonly="1" attrs="{'invisible':[('company_currency_amount','=', 0)]}" /> <!-- groups="base.group_no_one" -->
                         </group>
                         <group>    
                             <field name="owner_name" attrs="{'invisible':[('type','!=','third_check')],'required':[('type','=','third_check')]}"/>

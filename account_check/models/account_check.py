@@ -325,8 +325,7 @@ class account_check(models.Model):
     @api.onchange('amount')
     def recompute_currency_amount(self):
         if self.currency_id and self.currency_id != self.env.user.company_id.currency_id:
-            currency_rate = self.currency_id._get_current_rate()
-            self.company_currency_amount = self.amount*currency_rate[self.currency_id.id]
+            self.company_currency_amount = self.currency_id.compute(self.amount, self.env.user.company_id.currency_id)
 
     @api.one
     def unlink(self):
