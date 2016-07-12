@@ -112,7 +112,7 @@ class account_check_action(models.TransientModel):
             move.line_id.with_context({}).create(debit_line_vals)
             move.line_id.with_context({}).create(credit_line_vals)
 
-            check.write({'check_move_field': move.id, 'deposit': deposit})
+            check.write({check_move_field: move.id, 'deposit': deposit})
             check.signal_workflow(signal)
             move.button_validate()
         return True
