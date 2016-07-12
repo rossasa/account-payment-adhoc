@@ -12,7 +12,7 @@
                     <page string="Checks" attrs="{'invisible':[('payment_subtype','=', False)]}">
                         <field name="payment_subtype" invisible="1"/>
                         <field name="delivered_third_check_ids" attrs="{'invisible':[('payment_subtype','!=', 'third_check')]}" widget="many2many" domain="[('type','=','third_check'),('state', '=', 'holding'),('third_handed_voucher_id', '=', False),('journal_id', '=', journal_id)]" context="{'default_type':'third_check'}"/> 
-                        <field name="issued_check_ids" attrs="{'invisible':[('payment_subtype','!=', 'issue_check')]}" context="{'default_type':'issue_check','from_voucher':True,'default_journal_id':journal_id}"/> 
+                        <field name="issued_check_ids" attrs="{'invisible':[('payment_subtype','!=', 'issue_check')]}" context="{'default_type':'issue_check','from_voucher':True,'default_journal_id':journal_id,'default_amount':reconciled_amount}"/> 
                     </page>
                 </page>
                 <field name="net_amount" position="after">
@@ -33,7 +33,7 @@
                 <page string="Payment Information" position="after" >
                     <page string="Checks" attrs="{'invisible':[('payment_subtype','!=', 'third_check')]}">
                         <field name="payment_subtype" invisible="1"/>
-                        <field name="received_third_check_ids"/> 
+                        <field name="received_third_check_ids" context="{'default_amount':reconciled_amount}"/> 
                     </page>
                 </page>
                 <field name="net_amount" position="after">
@@ -56,11 +56,11 @@
                 </form>
                 <notebook name="voucher_payline">
                     <page string="Checks" name="receipt_checks" attrs="{'invisible':['|', ('payment_subtype', '!=', 'third_check'), ('type', '!=', 'receipt')]}">
-                        <field name="received_third_check_ids"/> 
+                        <field name="received_third_check_ids" context="{'default_amount':reconciled_amount}"/> 
                     </page>
                     <page string="Checks" name="payment_checks" attrs="{'invisible':['|', ('payment_subtype', '=', False), ('type', '!=', 'payment')]}">
                         <field name="delivered_third_check_ids" attrs="{'invisible':[('payment_subtype','!=', 'third_check')]}" widget="many2many" domain="[('type','=','third_check'),('state', '=', 'holding'),('third_handed_voucher_id', '=', False),('journal_id', '=', journal_id)]" context="{'default_type':'third_check'}"/> 
-                        <field name="issued_check_ids" attrs="{'invisible':[('payment_subtype','!=', 'issue_check')]}" context="{'default_type':'issue_check','from_voucher':True,'default_journal_id':journal_id}"/> 
+                        <field name="issued_check_ids" attrs="{'invisible':[('payment_subtype','!=', 'issue_check')]}" context="{'default_type':'issue_check','from_voucher':True,'default_journal_id':journal_id,'default_amount':reconciled_amount}"/> 
                     </page>
                 </notebook>
                 <field name="net_amount" position="after">
