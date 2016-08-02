@@ -92,7 +92,7 @@ class account_check(models.Model):
         'account.voucher',
         'Voucher',
         readonly=True,
-        required=True,
+        required=False,
         ondelete='cascade',
     )
     type = fields.Selection(
