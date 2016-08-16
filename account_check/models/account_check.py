@@ -253,6 +253,11 @@ class account_check(models.Model):
     deposit = fields.Char(
         string='Deposit Number'
     )
+    deposit_date = fields.Date(
+        related='deposit_account_move_id.date',
+        store=True,
+        string='Fecha de Depósito',
+    )
     # account move of return
     return_account_move_id = fields.Many2one(
         'account.move',

@@ -19,22 +19,33 @@
 #
 ##############################################################################
 {
+    'name': 'Account Check Reports',
+    'version': '8.0.0.0.0',
+    'category': 'Localization/Argentina',
+    'sequence': 14,
     'author': 'ADHOC SA',
     'website': 'www.adhoc.com.ar',
     'license': 'AGPL-3',
-    'category': 'Accounting & Finance',
-    'data': [
-        'account_voucher_view.xml',
+    'summary': '',
+    'description': """
+Account Check Reports
+=====================
+    """,
+    'depends': [
+        'account_check',
+        'report_aeroo'
     ],
-    'demo': [],
-    'depends': ['account_voucher'],
-    'description': '''
-Account Voucher Multi Company Fixes
-===================================
-* When changing company on account_voucher, change the journal domain to fit that company
-* When changing journal, update credit and debit lines for moves of that jounral company
-''',
+    'external_dependencies': {
+    },
+    'data': [
+        'views/account_check_view.xml',
+        'report/account_check_deposit_report.xml',
+    ],
+    'demo': [
+    ],
+    'test': [
+    ],
     'installable': True,
-    'name': 'Account Voucher Multi Company Fixes',
-    'test': [],
-    'version': '8.0.1.3.0'}
+    'auto_install': False,
+    'application': False,
+}
