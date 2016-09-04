@@ -82,11 +82,13 @@ class account_check(models.Model):
     )
     company_currency_amount = fields.Float(
         'Company Currency Amount',
-        readonly=False,
-        invisible=True,
         digits=dp.get_precision('Account'),
         help='This value is only set for those checks that has a different '
         'currency than the company one.'
+    )
+    display_company_currency_amount = fields.Float(
+        readonly=True,
+        related="company_currency_amount",
     )
     voucher_id = fields.Many2one(
         'account.voucher',
@@ -329,8 +331,10 @@ class account_check(models.Model):
     @api.one
     @api.onchange('amount')
     def recompute_currency_amount(self):
-        if self.currency_id and self.currency_id != self.env.user.company_id.currency_id:
-            self.company_currency_amount = self.currency_id.compute(self.amount, self.env.user.company_id.currency_id)
+        if self.currency_id \
+                and self.currency_id != self.env.user.company_id.currency_id:
+            self.company_currency_amount = self.currency_id.compute(
+                self.amount, self.env.user.company_id.currency_id)
 
     @api.one
     def unlink(self):

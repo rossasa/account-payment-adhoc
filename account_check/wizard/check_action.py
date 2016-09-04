@@ -51,7 +51,8 @@ class account_check_action(models.TransientModel):
 
     @api.onchange('journal_id')
     def onchange_journal_id(self):
-        self.account_id = self.journal_id.internal_account_id.id or self.journal_id.default_debit_account_id.id
+        self.account_id = self.journal_id.internal_account_id.id \
+            or self.journal_id.default_debit_account_id.id
 
     @api.model
     def validate_action(self, action_type, check):
