@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_check
-# 
+#
 # Translators:
 # Gonzalo Ruzafa <gr@ingadhoc.com>, 2015
 # Juan José Scarafía <scarafia.juanjose@gmail.com>, 2016
@@ -321,7 +321,7 @@ msgstr "Depósito de Cheque Nr. "
 #: view:account.check:account_check.view_account_check_form
 #: selection:account.check,state:0
 msgid "Deposited"
-msgstr "Depositado"
+msgstr "Depositar"
 
 #. module: account_check
 #: view:account.check:account_check.view_account_check_tree
