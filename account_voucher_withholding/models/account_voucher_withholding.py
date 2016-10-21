@@ -23,6 +23,10 @@ class account_voucher_withholding(models.Model):
         required=True,
         ondelete='cascade',
     )
+    period_id = fields.Many2one(
+        related='voucher_id.period_id',
+        store=True,
+    )
     display_name = fields.Char(
         compute='get_display_name'
     )
@@ -137,3 +141,10 @@ class account_voucher_withholding(models.Model):
             sequence = tax_withholding.sequence_id
             vals['internal_number'] = sequence.next_by_id(sequence.id) or '/'
         return super(account_voucher_withholding, self).create(vals)
+
+    @api.one
+    def unlink(self):
+        if self.state not in ('draft'):
+            raise Warning(_(
+                'Only withholding of vouchers on draft state can be deleted!'))
+        return super(account_voucher_withholding, self).unlink()
