@@ -321,7 +321,7 @@ msgstr "Depósito de Cheque Nr. "
 #: view:account.check:account_check.view_account_check_form
 #: selection:account.check,state:0
 msgid "Deposited"
-msgstr "Depositar"
+msgstr "Depositado"
 
 #. module: account_check
 #: view:account.check:account_check.view_account_check_tree

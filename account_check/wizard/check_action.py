@@ -46,7 +46,7 @@ class account_check_action(models.TransientModel):
         default=_get_company_id
     )
     deposit = fields.Char(
-        string='Deposit Number'
+        string='Numero de Deposito'
     )
 
     @api.onchange('journal_id')
