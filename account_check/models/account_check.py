@@ -64,7 +64,9 @@ class account_check(models.Model):
 
     name = fields.Char(
         compute='_get_name',
-        string=_('Number')
+        string=_('Number'),
+        # we store it to make migration easier
+        store=True,
     )
     number = fields.Integer(
         _('Number'),
@@ -82,6 +84,7 @@ class account_check(models.Model):
     )
     company_currency_amount = fields.Float(
         'Company Currency Amount',
+        readonly=False,
         digits=dp.get_precision('Account'),
         help='This value is only set for those checks that has a different '
         'currency than the company one.'
@@ -234,11 +237,18 @@ class account_check(models.Model):
         string='Currency',
         readonly=True,
         related='voucher_id.journal_id.currency',
+        # we store it for making migration easier
+        store=True,
     )
+    # to make migration easier
     vat = fields.Char(
+        related='owner_vat',
+    )
+    owner_vat = fields.Char(
         # TODO rename to Owner VAT
         'Owner Vat',
-        readonly=False,
+        oldname='vat',
+        readonly=True,
         states={'draft': [('readonly', False)]}
     )
     owner_name = fields.Char(
@@ -326,7 +336,7 @@ class account_check(models.Model):
     @api.onchange('voucher_id')
     def onchange_voucher(self):
         self.owner_name = self.voucher_id.partner_id.name
-        self.vat = self.voucher_id.partner_id.vat
+        self.owner_vat = self.voucher_id.partner_id.vat
 
     @api.one
     @api.onchange('amount')
